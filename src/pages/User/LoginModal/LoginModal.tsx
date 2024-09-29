@@ -72,7 +72,6 @@ const LoginModal: React.FC<{
 
   const { status, type: loginType } = userLoginState;
 
-
   return (
     <Modal title="登录" open={isModalOpen} footer={null} onCancel={() => setIsModalOpen(false)}>
       <LoginForm

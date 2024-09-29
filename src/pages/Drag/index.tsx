@@ -1,12 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {Stage, Layer, Text} from 'react-konva';
 import Konva from "konva";
+import LocalStorage from "@/pages/Drag/localstorage";
+import {Player} from "@/pages/Drag/Player";
+import {Button} from "antd"
 
-type Player = {
-  isDragging: boolean;
-  x: number;
-  y: number;
-}
+
 const TextSpan: React.FC<{
   player: Player,
   onDragStart: () => void,
@@ -30,11 +29,19 @@ const TextSpan: React.FC<{
 }
 
 const Drag: React.FC = () => {
-  const [player, setPlayer] = useState({
-    isDragging: false,
-    x: 50,
-    y: 50,
-  })
+
+  const playerLocalStorage = new LocalStorage("player")
+  playerLocalStorage.init();
+
+  const [player, setPlayer] = useState(playerLocalStorage.getItem().data)
+
+  useEffect(() => {
+    // 记录到本地
+    playerLocalStorage.setItem({
+      ...playerLocalStorage.getItem(),
+      data: player
+    })
+  }, [player])
 
   const onDragStart = () => {
     setPlayer({
@@ -48,11 +55,17 @@ const Drag: React.FC = () => {
       isDragging: false,
       x: e.target.x(),
       y: e.target.y(),
-    });
+    },);
   };
+
+  const onShareClick = () => {
+
+  }
 
   return (
     <div style={{width: 1050, height: 580}}>
+      <Button onClick={onShareClick}>分享链接</Button>
+      <Button onClick={onShareClick}>分享</Button>
       <Stage width={window.innerWidth} height={window.innerHeight}>
         <Layer>
           <TextSpan
